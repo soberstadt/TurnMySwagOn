@@ -1,0 +1,38 @@
+body {
+  background: #9ec25f url(../images/crisp_paper_ruffles_green.png);
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  text-align: center;
+}
+
+h1 {
+	font-size: 4em;
+  font-family: Georgia, Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  text-shadow: 1px 2px 0px #EEE, 1px 3px 0px #707070;
+  margin: 10px 0 20px;
+}
+
+#swag_switch {
+  border: 1px solid #555;
+  display: none;
+}
+
+#swag_switch .block {
+  background: #999;
+  width: 55px;
+  height: 55px;
+  position: fixed;
+  margin-top: 54px;
+}
+
+#swag_switch span {
+  display: block;
+  height: 55px;
+  width: 55px;
+  padding: 5px;
+}
