@@ -1,6 +1,6 @@
 body {
   background: #9ec25f url(../images/crisp_paper_ruffles_green.png);
-  font-size: 14px;
+  font-size: 75px;
   margin: 0;
   padding: 0;
 }
@@ -10,29 +10,67 @@ body {
 }
 
 h1 {
-	font-size: 4em;
+	font-size: .8em;
   font-family: Georgia, Arial, Helvetica, sans-serif;
   font-weight: bold;
   text-shadow: 1px 2px 0px #EEE, 1px 3px 0px #707070;
   margin: 10px 0 20px;
 }
 
+#swag_switch, #swag_switch * {
+  position: absolute;
+}
+
 #swag_switch {
-  border: 1px solid #555;
-  display: none;
+  border: 3px solid #555;
+  background: #DDD;
+  display: inline-block;
+  height: 6em;
+  width: 2.6em;
+  left: 50%;
+  margin-left: -1.3em;
+  overflow: hidden;
 }
 
 #swag_switch .block {
   background: #999;
-  width: 55px;
-  height: 55px;
-  position: fixed;
-  margin-top: 54px;
+  border: 0 solid #BBB;
+  border-bottom-width: .7em;
+  width: 100%;
+  height: 2.65em;
+  top: -2%;
+  margin-bottom: -100%;
+  -webkit-transition: all .5s cubic-bezier(.42, 0, .58, 1);
+}
+
+#swag_switch.checked .block {
+  top: 3.35em;
+  border-top-width: .7em;
+  margin-top: -.7em;
+  border-bottom-width: 0;
 }
 
 #swag_switch span {
   display: block;
-  height: 55px;
-  width: 55px;
-  padding: 5px;
+  height: 50%;
+  width: 100%;
+  margin-top: -.5em;
+}
+
+#swag_switch .off {
+  top: -50%;
+  -webkit-transition: top .5s cubic-bezier(.42, 0, .58, 1);
+}
+
+#swag_switch.checked .off {
+  top: 25%;
+}
+
+#swag_switch .on {
+  top: 75%;
+  -webkit-transition: top .5s cubic-bezier(.42, 0, .58, 1);
+}
+
+#swag_switch.checked .on {
+  top: 150%;
 }
