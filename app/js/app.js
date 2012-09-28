@@ -1,1 +1,5 @@
-$('#swag_switch').click(function() {$(this).toggleClass("checked")})
+this.switchClick = function () {
+  $(this).toggleClass("checked")
+}
+
+$('#swag_switch').on("mousedown", switchClick)
