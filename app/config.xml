@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns       = "http://www.w3.org/ns/widgets"
         xmlns:gap   = "http://phonegap.com/ns/1.0"
-        id          = "com.256design.tmso"
+        id          = "com.twofivesix.tmso"
         version     = "0.1.0"
-        versionCode = "2">
+        versionCode = "3">
     <name>Turn My Swag On</name>
 
     <description>
