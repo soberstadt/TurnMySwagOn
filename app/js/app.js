@@ -35,10 +35,43 @@ function hideLoginBox () {
 
 this.twitterClick = function () {
   hideLoginBox()
+
+  if(window.twitter == "disabled") {
+    // enable twitter
+  }
+  else if (window.twitter) {
+    window.twitter = "disabled"
+  }
+  else {
+    // log into twitter
+  }
 }
 
 this.facebookClick = function () {
   hideLoginBox()
+}
+
+function twitter_login () {
+  if(window.plugins && window.plugins.childBrowser) {
+    oauth.get('https://api.twitter.com/oauth/request_token',
+        function(data) {
+          requestParams = data.text
+          //$('#oauthStatus').html('<span style="color:blue;">Getting authorization...</span>')
+          window.plugins.childBrowser.showWebPage('https://api.twitter.com/oauth/authorize?'+data.text, 
+                  { showLocationBar : false })                   
+        },
+        function(data) { 
+          app_alert('Error : No Authorization')
+          //$('#oauthStatus').html('<span style="color:red;">Error during authorization</span>')
+        }
+    )
+  }
+  else
+    app_alert("No childBrowser!")
+}
+
+function app_alert (message) {
+  alert(message)
 }
 
 $('#swag_switch').on("mousedown", switchClick)
