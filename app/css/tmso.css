@@ -1,6 +1,5 @@
 body {
   background: #9ec25f url(../images/crisp_paper_ruffles_green.png);
-  font-size: 65px;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -17,11 +16,18 @@ body {
 }
 
 h1 {
-	font-size: .8em;
+  font-size: 52px;
   font-family: Georgia, Arial, Helvetica, sans-serif;
   font-weight: bold;
   text-shadow: 1px 2px 0px #EEE, 1px 3px 0px #707070;
   margin: 10px 0 20px;
+}
+
+.hidden_top {
+  overflow: hidden;
+  height: 0;
+  padding: 0 !important;
+  -webkit-transition: all .5s;
 }
 
 #swag_switch, #swag_switch .block, #swag_switch span {
@@ -33,11 +39,13 @@ h1 {
 }
 
 #swag_switch {
+  font-size: 65px;
   border-width: 0 3px;
   background: #DDD;
   display: inline-block;
   height: 6em;
   overflow: hidden;
+  margin-bottom: 10px;
 }
 
 #swag_switch .contents {
@@ -79,7 +87,7 @@ h1 {
 }
 
 #swag_switch .on {
-  margin-bottom: -3px;
+  margin-bottom: -1px;
 }
 
 /*.footer {
@@ -90,4 +98,25 @@ h1 {
 
 .footer div {
   display: inline-block;
+}
+
+#message_box_container {
+  position: absolute;
+  width: 100%;
+  top: 0;
+}
+
+.message_box {
+  display: inline-block;
+  padding: 10px;
+  background: #5F5F5F;
+  color: white;
+}
+
+#message_box_login {
+  width: 280px;
+}
+
+#message_box_post textarea {
+  display: block;
 }
