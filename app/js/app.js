@@ -53,6 +53,8 @@ this.facebookClick = function () {
 
 function twitter_login () {
   if(window.plugins && window.plugins.childBrowser) {
+    if(window.oauth === undefined)
+      init_oauth()
     oauth.get('https://api.twitter.com/oauth/request_token',
         function(data) {
           requestParams = data.text
@@ -72,6 +74,10 @@ function twitter_login () {
 
 function app_alert (message) {
   alert(message)
+}
+
+function init_oauth () {
+  window.oauth = OAuth(twitter_options)
 }
 
 $('#swag_switch').on("mousedown", switchClick)
