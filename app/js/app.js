@@ -43,7 +43,7 @@ this.twitterClick = function () {
     window.twitter = "disabled"
   }
   else {
-    // log into twitter
+    twitter_login()
   }
 }
 
