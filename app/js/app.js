@@ -60,7 +60,10 @@ function twitter_login () {
           requestParams = data.text
           //$('#oauthStatus').html('<span style="color:blue;">Getting authorization...</span>')
           window.plugins.childBrowser.showWebPage('https://api.twitter.com/oauth/authorize?'+data.text, 
-                  { showLocationBar : false })                   
+                  { showLocationBar : false })
+          // check if child browser already has listener
+          if (typeof window.plugins.childBrowser.onLocationChange !== "function") {
+            window.plugins.childBrowser.onLocationChange = childBrowserLocChange
         },
         function(data) { 
           app_alert('Error : No Authorization')
@@ -70,6 +73,37 @@ function twitter_login () {
   }
   else
     app_alert("No childBrowser!")
+}
+
+function childBrowserLocChange (newLoc) {
+  console.log("childBrowser loc change: " + newLoc)
+
+  // If user hit "No, thanks" when asked to authorize access
+  if (loc.indexOf("?denied") >= 0 || loc === "http://www.256design.com/swag") {
+    app_alert("Twitter Authorization Denied")
+    window.plugins.childBrowser.close()
+    return
+  }
+  // The supplied oauth_callback_url for this session is being loaded
+  if (loc.indexOf("http://www.your-callback-url.com/?") >= 0) {
+    // EXTRACT VERIFIER
+
+    // Exchange request token for access token 
+    oauth.get('https://api.twiter.com/oauth/access_token?oauth_verifier='+verifier+'&'+requestParams,
+      function () {
+        // SUCCESS HANDLER: EXTRACT ACCESS TOKEN KEY and SECRET
+        // SAVE TOKEN KEY/SECRET in oauth obj 
+        // SAVE TOKEN KEY/SECRET in localStorage
+        // CALL oauth.get() TO GET USER'S screen_name 
+        window.plugins.childBrowser.close()
+      },
+      function () {
+        // FAIL HANDLER
+        window.plugins.childBrowser.close()
+        app_alert("Failed to obtain access token. :(")
+      }
+    )
+  }
 }
 
 function app_alert (message) {
