@@ -62,7 +62,7 @@ function twitter_login () {
           window.plugins.childBrowser.showWebPage('https://api.twitter.com/oauth/authorize?'+data.text, 
                   { showLocationBar : false })
           // check if child browser already has listener
-          if (typeof window.plugins.childBrowser.onLocationChange !== "function") {
+          if (typeof window.plugins.childBrowser.onLocationChange !== "function")
             window.plugins.childBrowser.onLocationChange = childBrowserLocChange
         },
         function(data) { 
@@ -90,7 +90,8 @@ function childBrowserLocChange (newLoc) {
 
     // Exchange request token for access token 
     oauth.get('https://api.twiter.com/oauth/access_token?oauth_verifier='+verifier+'&'+requestParams,
-      function () {
+      function (data) {
+        console.log(data)
         // SUCCESS HANDLER: EXTRACT ACCESS TOKEN KEY and SECRET
         // SAVE TOKEN KEY/SECRET in oauth obj 
         // SAVE TOKEN KEY/SECRET in localStorage
