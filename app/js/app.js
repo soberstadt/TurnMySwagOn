@@ -85,11 +85,14 @@ function childBrowserLocChange (newLoc) {
     return
   }
   // The supplied oauth_callback_url for this session is being loaded
-  if (loc.indexOf("http://www.your-callback-url.com/?") >= 0) {
+  if (loc.indexOf("http://www.256design.com/swag?") >= 0) {
     // EXTRACT VERIFIER
+    var data  = loc.split("?")[1].split("&")
+    this.twitter.oauth_token = data[0].split("=")[1]
+    this.twitter.oauth_verifier = data[1].split("=")[1]
 
     // Exchange request token for access token 
-    oauth.get('https://api.twiter.com/oauth/access_token?oauth_verifier='+verifier+'&'+requestParams,
+    oauth.get('https://api.twiter.com/oauth/access_token?oauth_verifier='+this.twitter.oauth_verifier+'&'+requestParams,
       function (data) {
         console.log(data)
         // SUCCESS HANDLER: EXTRACT ACCESS TOKEN KEY and SECRET
