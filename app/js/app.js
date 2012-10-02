@@ -92,7 +92,8 @@ function childBrowserLocChange (newLoc) {
                        oauth_verifier = data[1].split("=")[1] }
 
     // Exchange request token for access token 
-    oauth.get('https://api.twiter.com/oauth/access_token?oauth_verifier='+window.twitter.oauth_verifier+'&'+requestParams,
+    oauth.get('https://api.twiter.com/oauth/access_token?oauth_verifier='+
+        window.twitter.oauth_verifier+'&'+requestParams,
       function (data) {
         console.log(data)
         // SUCCESS HANDLER: EXTRACT ACCESS TOKEN KEY and SECRET
@@ -100,6 +101,7 @@ function childBrowserLocChange (newLoc) {
         // SAVE TOKEN KEY/SECRET in localStorage
         // CALL oauth.get() TO GET USER'S screen_name 
         window.plugins.childBrowser.close()
+        app_alert("Access Granted!")
       },
       function () {
         // FAIL HANDLER
