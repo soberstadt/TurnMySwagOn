@@ -13,7 +13,7 @@ this.switchClick = function () {
 
     if(window.swagger == "off") {
       window.swagger = "on"
-      if(window.twitter || window.facebook)
+      if((window.twitter && window.twitter.enabled) || window.facebook)
         $('#message_box_post').removeClass('hidden_top')
       else {
         setTimeout(function() { window.clickable = true },500)
@@ -36,11 +36,11 @@ function hideLoginBox () {
 this.twitterClick = function () {
   hideLoginBox()
 
-  if(window.twitter == "disabled") {
-    // enable twitter
+  if(window.twitter && window.twitter.enabled) {
+    window.twitter.enabled = false
   }
   else if (window.twitter) {
-    window.twitter = "disabled"
+    window.twitter.enabled = true
   }
   else {
     twitter_login()
@@ -95,13 +95,23 @@ function childBrowserLocChange (newLoc) {
     oauth.get('https://api.twiter.com/oauth/access_token?oauth_verifier='+
         window.twitter.oauth_verifier+'&'+requestParams,
       function (data) {
-        console.log(data)
+        console.log(data.text)
         // SUCCESS HANDLER: EXTRACT ACCESS TOKEN KEY and SECRET
-        // SAVE TOKEN KEY/SECRET in oauth obj 
-        // SAVE TOKEN KEY/SECRET in localStorage
-        // CALL oauth.get() TO GET USER'S screen_name 
-        window.plugins.childBrowser.close()
-        app_alert("Access Granted!")
+        data = data.text.split("&")
+        if(data.length > 1) {
+          window.twitter.oauth_token = data[0].split("=")[1]
+          window.twitter.oauth_token_secret = data[1].split("=")[1]
+          window.twitter.enabled = true
+          // SAVE TOKEN KEY/SECRET in oauth obj 
+          // SAVE TOKEN KEY/SECRET in localStorage
+          // CALL oauth.get() TO GET USER'S screen_name 
+          window.plugins.childBrowser.close()
+          app_alert("Access Granted!")
+          get_twitter_handle()
+        }
+        else {
+          app_alert("Error: Access request response mis-formed.")
+        }
       },
       function () {
         // FAIL HANDLER
@@ -110,6 +120,19 @@ function childBrowserLocChange (newLoc) {
       }
     )
   }
+}
+
+function get_twitter_handle () {
+  if(!window.oauth)
+    init_oauth()
+  window.oauth.get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=2",
+    function (data) {
+      console.log(data)
+      app_alert("get_twitter_handle success")
+    },
+    function () {
+      app_alert("get_twitter_handle fail")
+    })
 }
 
 function app_alert (message) {
