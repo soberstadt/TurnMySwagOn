@@ -79,15 +79,15 @@ function childBrowserLocChange (newLoc) {
   console.log("childBrowser loc change: " + newLoc)
 
   // If user hit "No, thanks" when asked to authorize access
-  if (loc.indexOf("?denied") >= 0 || loc === "http://www.256design.com/swag") {
+  if (newLoc.indexOf("?denied") >= 0 || newLoc === "http://www.256design.com/swag") {
     app_alert("Twitter Authorization Denied")
     window.plugins.childBrowser.close()
     return
   }
   // The supplied oauth_callback_url for this session is being loaded
-  if (loc.indexOf("http://www.256design.com/swag?") >= 0) {
+  if (newLoc.indexOf("http://www.256design.com/swag?") >= 0) {
     // EXTRACT VERIFIER
-    var data  = loc.split("?")[1].split("&")
+    var data  = newLoc.split("?")[1].split("&")
     this.twitter.oauth_token = data[0].split("=")[1]
     this.twitter.oauth_verifier = data[1].split("=")[1]
 
