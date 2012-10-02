@@ -88,8 +88,8 @@ function childBrowserLocChange (newLoc) {
   if (newLoc.indexOf("http://www.256design.com/swag?") >= 0) {
     // EXTRACT VERIFIER
     var data  = newLoc.split("?")[1].split("&")
-    window.twitter = { oauth_token = data[0].split("=")[1],
-                       oauth_verifier = data[1].split("=")[1] }
+    window.twitter = { oauth_token : data[0].split("=")[1],
+                       oauth_verifier : data[1].split("=")[1] }
 
     // Exchange request token for access token 
     oauth.get('https://api.twiter.com/oauth/access_token?oauth_verifier='+
