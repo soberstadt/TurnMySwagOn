@@ -105,13 +105,13 @@ function childBrowserLocChange (newLoc) {
           // SAVE TOKEN KEY/SECRET in oauth obj 
           // SAVE TOKEN KEY/SECRET in localStorage
           // CALL oauth.get() TO GET USER'S screen_name 
-          window.plugins.childBrowser.close()
           app_alert("Access Granted!")
           get_twitter_handle()
         }
         else {
-          app_alert("Error: Access request response mis-formed.")
+          app_alert("Error: Access request response mis-formed. :(")
         }
+        window.plugins.childBrowser.close()
       },
       function () {
         // FAIL HANDLER

@@ -3,7 +3,7 @@
         xmlns:gap   = "http://phonegap.com/ns/1.0"
         id          = "com.twofivesix.tmso"
         version     = "0.1.1"
-        versionCode = "8">
+        versionCode = "10">
     <name>Turn My Swag On</name>
 
     <description>
