@@ -1,8 +1,8 @@
 this.swagger = "off"
 
 var twitter_options = { 
-    consumerKey: 'DZqGJ4FptGhFcrkhCNWJWw',
-    consumerSecret: 'DxAND4An72rftPDMq6BYFV3sq9AwZi9yDuWx9rJTA',
+    consumerKey: 'o7zgkGZVKaTP1iZrPI7YA',
+    consumerSecret: 'dT5LcbkQMjsupHJK7swl3YGJB9wyQeWV7rNpw0PVBY',
     callbackUrl: 'http://www.256design.com/swag' };
 
 this.switchClick = function () {
@@ -57,7 +57,8 @@ function twitter_login () {
       init_oauth()
     oauth.get('https://api.twitter.com/oauth/request_token',
         function(data) {
-          requestParams = data.text
+          window.requestParams = data.text
+          console.log("data.text: " + data.text)
           //$('#oauthStatus').html('<span style="color:blue;">Getting authorization...</span>')
           window.plugins.childBrowser.showWebPage('https://api.twitter.com/oauth/authorize?'+data.text, 
                   { showLocationBar : false })
@@ -67,6 +68,7 @@ function twitter_login () {
         },
         function(data) { 
           app_alert('Error : No Authorization')
+          console.log(data.text)
           //$('#oauthStatus').html('<span style="color:red;">Error during authorization</span>')
         }
     )
@@ -92,8 +94,9 @@ function childBrowserLocChange (newLoc) {
                        oauth_verifier : data[1].split("=")[1] }
 
     // Exchange request token for access token 
+    console.log('https://api.twiter.com/oauth/access_token?oauth_verifier='+window.twitter.oauth_verifier+'&'+window.requestParams)
     oauth.get('https://api.twiter.com/oauth/access_token?oauth_verifier='+
-        window.twitter.oauth_verifier+'&'+requestParams,
+        window.twitter.oauth_verifier+'&'+window.requestParams,
       function (data) {
         console.log(data.text)
         // SUCCESS HANDLER: EXTRACT ACCESS TOKEN KEY and SECRET
