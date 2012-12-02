@@ -3,7 +3,7 @@ this.swagger = "off"
 var twitter_options = { 
     consumerKey: 'o7zgkGZVKaTP1iZrPI7YA',
     consumerSecret: 'dT5LcbkQMjsupHJK7swl3YGJB9wyQeWV7rNpw0PVBY',
-    callbackUrl: 'http://www.256design.com/swag' },
+    callbackUrl: 'http://swagon.herokuapp.com/accept_twitter.txt' },
     twitter_oauth,
     twitterLocalStoreKey = "twitter_info"
 
@@ -16,7 +16,7 @@ this.switchClick = function () {
     if(window.swagger == "off") {
       window.swagger = "on"
       if((window.twitter && window.twitter.enabled) || window.facebook)
-        $('#message_box_post').removeClass('hidden_top')
+        showPostBox()
       else {
         setTimeout(function() { window.clickable = true },500)
         $('#message_box_login').removeClass('hidden_top')
@@ -30,6 +30,25 @@ this.switchClick = function () {
   }
 }
 
+function showPostBox() {
+  $('#message_box_post').removeClass('hidden_top')
+  if(window.facebook && window.facebook.enabled) {
+    $("#facebook_name").show()
+    $("#facebook_name span").html(window.facebook.user_name)
+  }
+  else
+    $("#facebook_name").hide()
+
+  if(window.twitter && window.twitter.enabled) {
+    $("#twitter_name").show()
+    $("#twitter_name span").html(window.twitter.screen_name)
+  }
+  else
+    $("#twitter_name").hide()
+
+  $('#post_message').val("I just turned my swag on, like a boss. #SwagOn http://swag.256design.com/get")
+}
+
 function hideLoginBox () {
   $('#message_box_login').addClass('hidden_top')
   window.clickable = true
@@ -37,6 +56,7 @@ function hideLoginBox () {
 
 this.twitterClick = function () {
   hideLoginBox()
+  cancelPost()
 
   if(window.twitter && window.twitter.enabled) {
     window.twitter.enabled = false
