@@ -71,6 +71,17 @@ this.twitterClick = function () {
 
 this.facebookClick = function () {
   hideLoginBox()
+  cancelPost()
+
+  if(window.facebook && window.facebook.enabled) {
+    window.facebook.enabled = false
+  }
+  else if (window.facebook) {
+    window.facebook.enabled = true
+  }
+  else {
+    facebook_login()
+  }
 }
 
 function twitter_login () {
@@ -78,68 +89,66 @@ function twitter_login () {
     var requestParams;
     
     // Set childBrowser callback to detect our oauth_callback_url
-    if (typeof window.plugins.childBrowser.onLocationChange !== "function") {
-      window.plugins.childBrowser.onLocationChange = function(loc) {
-        // If user hit "No, thanks" when asked to authorize access
-        if (loc.indexOf("?denied") >= 0) {
-          app_alert("Premission denied")
-          window.plugins.childBrowser.close();
-          return;
-        }
+    window.plugins.childBrowser.onLocationChange = function(loc) {
+      // If user hit "No, thanks" when asked to authorize access
+      if (loc.indexOf("?denied") >= 0) {
+        app_alert("Premission denied")
+        window.plugins.childBrowser.close();
+        return;
+      }
+      
+      // The supplied oauth_callback_url for this session is being loaded
+      if (loc.indexOf(twitter_options.callbackUrl) >= 0) {
+        window.plugins.childBrowser.close();
+        var index, verifier = '';            
+        var params = loc.substr(loc.indexOf('?') + 1);
         
-        // The supplied oauth_callback_url for this session is being loaded
-        if (loc.indexOf(twitter_options.callbackUrl) >= 0) {
-          window.plugins.childBrowser.close();
-          var index, verifier = '';            
-          var params = loc.substr(loc.indexOf('?') + 1);
-          
-          params = params.split('&');
-          for (var i = 0; i < params.length; i++) {
-              var y = params[i].split('=');
-              if(y[0] === 'oauth_verifier') {
-                  verifier = y[1];
-              }
-          }
-     
-          // Exchange request token for access token
-          twitter_oauth.get('https://api.twitter.com/oauth/access_token?oauth_verifier='+verifier+'&'+requestParams,
-            function(data) {
-              var accessParams = {};
-              var qvars_tmp = data.text.split('&');
-              for (var i = 0; i < qvars_tmp.length; i++) {
-                var y = qvars_tmp[i].split('=');
-                accessParams[y[0]] = decodeURIComponent(y[1]);
-              }
-              twitter_oauth.setAccessToken([accessParams.oauth_token, accessParams.oauth_token_secret]);
-              
-              // Save access token/key in localStorage
-              window.twitter = {};
-              window.twitter.accessTokenKey = accessParams.oauth_token;
-              window.twitter.accessTokenSecret = accessParams.oauth_token_secret;
-              console.log("Storing token key/secret in localStorage");
-              localStorage.setItem(twitterLocalStoreKey, JSON.stringify(window.twitter));
-
-              twitter_oauth.get('https://api.twitter.com/1/account/verify_credentials.json?skip_status=true',
-                function(data) {
-                  var screen_name = JSON.parse(data.text).screen_name
-                  console.log("twitter screen_name: " + screen_name)
-                  window.twitter.enabled = true
-                  window.twitter.screen_name = screen_name
-                 },
-                function(data) { 
-                  app_alert('Error getting twitter credentials. :('); 
-                  console.log("twitter Error " + data); 
-                }
-              );
-            },
-            function(data) { 
-              app_alert('Error : No Authorization'); 
-              console.log("twitter Error " + data); 
+        params = params.split('&');
+        for (var i = 0; i < params.length; i++) {
+            var y = params[i].split('=');
+            if(y[0] === 'oauth_verifier') {
+                verifier = y[1];
             }
-          );
         }
-      };  
-    } // end if
+   
+        // Exchange request token for access token
+        twitter_oauth.get('https://api.twitter.com/oauth/access_token?oauth_verifier='+verifier+'&'+requestParams,
+          function(data) {
+            var accessParams = {};
+            var qvars_tmp = data.text.split('&');
+            for (var i = 0; i < qvars_tmp.length; i++) {
+              var y = qvars_tmp[i].split('=');
+              accessParams[y[0]] = decodeURIComponent(y[1]);
+            }
+            twitter_oauth.setAccessToken([accessParams.oauth_token, accessParams.oauth_token_secret]);
+            
+            // Save access token/key in localStorage
+            window.twitter = {};
+            window.twitter.accessTokenKey = accessParams.oauth_token;
+            window.twitter.accessTokenSecret = accessParams.oauth_token_secret;
+            console.log("Storing token key/secret in localStorage");
+            localStorage.setItem(twitterLocalStoreKey, JSON.stringify(window.twitter));
+
+            twitter_oauth.get('https://api.twitter.com/1/account/verify_credentials.json?skip_status=true',
+              function(data) {
+                var screen_name = JSON.parse(data.text).screen_name
+                console.log("twitter screen_name: " + screen_name)
+                window.twitter.enabled = true
+                window.twitter.screen_name = screen_name
+               },
+              function(data) { 
+                app_alert('Error getting twitter credentials. :('); 
+                console.log("twitter Error " + data); 
+              }
+            );
+          },
+          function(data) { 
+            app_alert('Error : No Authorization'); 
+            console.log("twitter Error " + data); 
+          }
+        );
+      }
+    };  
     
     // Note: Consumer Key/Secret and callback url always the same for this app.        
     twitter_oauth = OAuth(twitter_options);
@@ -148,7 +157,7 @@ function twitter_login () {
         requestParams = data.text;
         console.log("twitter requestParams: " + data.text);
         window.plugins.childBrowser.showWebPage('https://api.twitter.com/oauth/authorize?'+data.text, 
-          { showLocationBar : false });
+          { showLocationBar : false })
       },
       function(data) { 
         app_alert('Error getting twitter credentials. :('); 
@@ -158,6 +167,10 @@ function twitter_login () {
   }
   else
     app_alert("No childBrowser!")
+}
+
+function facebook_login () {
+  facebook_connection.init()
 }
 
 function app_alert (message) {
