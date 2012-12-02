@@ -148,7 +148,40 @@ function init_oauth () {
   window.oauth = OAuth(twitter_options)
 }
 
+function cancelPost () {
+  $('#post_message').val("")
+  $('#message_box_post').addClass('hidden_top')
+}
+
+function sharePost () {
+  var trimmed = $('#post_message').val().replace(/^\s+|\s+$/g, '')
+  $('#post_message').val(trimmed)
+  
+  if(trimmed.length == 0) {
+    app_alert("You can't share with no swag... how about you add a message?")
+    $('#post_message').focus()
+    return;
+  }
+
+  if(window.twitter && window.twitter.enabled) {
+    twitter_oauth.post(
+      'https://api.twitter.com/1/statuses/update.json',
+      { 'status' : trimmed,  // jsOAuth encodes for us
+      'trim_user' : 'true' },
+      function(data) {
+        app_alert("Successfully shared.")
+        cancelPost()
+      },
+      function(data) { 
+        app_alert('Error posting to Twitter :('); 
+      }
+    ) 
+  }
+}
+
 $('#swag_switch').on("mousedown", switchClick)
+$('#post_cancel').click(cancelPost)
+$('#post_share').click(sharePost)
 $('.twitter').click(twitterClick)
 $('.facebook').click(facebookClick)
 
