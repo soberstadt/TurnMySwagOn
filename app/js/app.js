@@ -189,6 +189,7 @@ function init_oauth () {
 function cancelPost () {
   $('#post_message').val("")
   $('#message_box_post').addClass('hidden_top')
+  window.waiting_for = {}
 }
 
 function sharePost () {
@@ -201,20 +202,56 @@ function sharePost () {
     return;
   }
 
+  window.waiting_for = {}
   if(window.twitter && window.twitter.enabled) {
+    window.waiting_for.twitter = true;
     twitter_oauth.post(
       'https://api.twitter.com/1/statuses/update.json',
       { 'status' : trimmed,  // jsOAuth encodes for us
       'trim_user' : 'true' },
       function(data) {
-        app_alert("Successfully shared.")
-        cancelPost()
+        post_success("twitter")
       },
       function(data) { 
-        app_alert('Error posting to Twitter :('); 
+        var output = ''
+        for (property in data) {
+          output += property + ': ' + data[property]+'; '
+        }
+        console.log("twitter error: " + output)
+        post_fail("twitter")
       }
     ) 
   }
+
+  if(window.facebook && window.facebook.enabled) {
+    window.waiting_for.facebook = true;
+    facebook_connection.post(trimmed,
+      function(data) {
+        post_success("facebook")
+      },
+      function(error, something) {
+        if(error.status == 200)
+          post_success("facebook")
+        else
+          post_fail("facebook")
+      })
+  }
+}
+
+function post_success(method) {
+  delete window.waiting_for[method]
+  if((method == "twitter" && !window.waiting_for.facebook) ||
+     (method == "facebook" && !window.waiting_for.twitter)) {
+    app_alert("Successfully shared.")
+    cancelPost()
+  }
+}
+
+function post_fail(method) {
+  if(method == "twitter")
+    app_alert('Error posting to Twitter :(') 
+  else
+    app_alert('Error posting to Facebook :(')
 }
 
 $('#swag_switch').on("mousedown", switchClick)
@@ -248,7 +285,9 @@ if (rawData !== null) {
       localStorage.removeItem(twitterLocalStoreKey)
       console.log("No Twitter Authorization from localStorage data")
     }
-  );
+  )
 } 
+facebook_connection.recoverSavedToken()
+
 delete storedAccessData
 delete rawData

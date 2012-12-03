@@ -75,11 +75,19 @@ var facebook_connection = {
       if(accessParams.access_token && accessParams.expires_in)
       {
       	window.facebook = accessParams
+      	localStorage.setItem(facebook_token, JSON.stringify(accessParams))
       	facebook_connection.getMe()
       }
       else {
       	window.app_alert("Error connecting Facebook")
       }
+		}
+	},
+
+	recoverSavedToken:function() {
+		if(localStorage.getItem(facebook_token)) {
+			window.facebook = JSON.parse(localStorage.getItem(facebook_token))
+			facebook_connection.getMe()
 		}
 	},
 
@@ -98,6 +106,7 @@ var facebook_connection = {
 					window.facebook.user_name = data.name
 					window.facebook.user_id = data.id
 					window.facebook.enabled = true
+    			$('.facebook').removeClass('disabled')
 				}
 				else
 					window.app_alert("Error getting user data!")
@@ -122,27 +131,11 @@ var facebook_connection = {
 		req.send(null); 
 		return req;
 	},
-	post:function(_fbType,params){
-
-		// Our Base URL which is composed of our request type and our localStorage facebook_token
-		var url = 'https://graph.facebook.com/me/'+_fbType+'?access_token='+localStorage.getItem(facebook_token);
-		
-		// Build our URL
-		for(var key in params){
-			if(key == "message"){
-				
-				// We will want to escape any special characters here vs encodeURI
-				url = url+"&"+key+"="+escape(params[key]);
-			}
-			else {
-				url = url+"&"+key+"="+encodeURIComponent(params[key]);
-			}
-		}
-		
-		var req = facebook_connection.share(url);
-		
-		// Our success callback
-		req.onload = facebook_connection.success();
+	post:function(message, success, failure) {
+		var url = "https://graph.facebook.com/me/feed?access_token="+window.facebook.access_token
+		$.post(url, {message: message})
+				.success(success)
+				.error(failure)
 	},
 	success:function(){
 		$("#statusTXT").show();
