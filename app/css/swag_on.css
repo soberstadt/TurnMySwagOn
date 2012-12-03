@@ -98,6 +98,20 @@ h1 {
 
 .footer div {
   display: inline-block;
+  background-repeat: no-repeat;
+  background-position-x: 50%;
+  margin: 0 5px;
+}
+
+.footer .facebook {
+  background-image: url(../images/fb_logo_disabled.png);
+}
+.footer .twitter {
+  background-image: url(../images/twitter_logo_disabled.png);
+}
+
+.footer .disabled img {
+  visibility: hidden;
 }
 
 #message_box_container {
@@ -113,6 +127,11 @@ h1 {
   background: #5F5F5F;
   color: white;
 }
+
+  .message_box .name {
+    margin: 0 10px;
+    width: 260px;
+  }
 
 #message_box_login {
   width: 280px;

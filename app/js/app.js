@@ -60,9 +60,11 @@ this.twitterClick = function () {
 
   if(window.twitter && window.twitter.enabled) {
     window.twitter.enabled = false
+    $('.twitter').addClass('disabled')
   }
   else if (window.twitter) {
     window.twitter.enabled = true
+    $('.twitter').removeClass('disabled')
   }
   else {
     twitter_login()
@@ -75,9 +77,11 @@ this.facebookClick = function () {
 
   if(window.facebook && window.facebook.enabled) {
     window.facebook.enabled = false
+    $('.facebook').addClass('disabled')
   }
   else if (window.facebook) {
     window.facebook.enabled = true
+    $('.facebook').removeClass('disabled')
   }
   else {
     facebook_login()
@@ -135,6 +139,7 @@ function twitter_login () {
                 console.log("twitter screen_name: " + screen_name)
                 window.twitter.enabled = true
                 window.twitter.screen_name = screen_name
+                $('.twitter').removeClass('disabled')
                },
               function(data) { 
                 app_alert('Error getting twitter credentials. :('); 
@@ -234,6 +239,7 @@ if (rawData !== null) {
         enabled : true,
         screen_name : screen_name
       }
+      $('.twitter').removeClass('disabled') 
     },
     function(data) { 
       alert('Error with stored user data. Re-start authorization.')
