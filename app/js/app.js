@@ -175,7 +175,14 @@ function twitter_login () {
 }
 
 function facebook_login () {
-  facebook_connection.init()
+  facebook_connection.init(
+    function() {
+      console.log("Successfully recovered saved facebook!")
+      $('.facebook').removeClass('disabled')
+    },
+    function(error) {
+      window.app_alert("Error getting user data!")
+    })
 }
 
 function app_alert (message) {
@@ -287,7 +294,15 @@ if (rawData !== null) {
     }
   )
 } 
-facebook_connection.recoverSavedToken()
+facebook_connection.recoverSavedToken(
+  function() {
+    console.log("Successfully recovered saved facebook!")
+    $('.facebook').removeClass('disabled')
+  },
+  function() {
+    window.app_alert("Error getting user data!")
+  }
+)
 
 delete storedAccessData
 delete rawData
