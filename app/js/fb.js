@@ -35,11 +35,10 @@ var facebook_connection = {
     this.login_success_cb = success
     this.login_error_cb = error
 
-    var oauth2_url = "https://www.facebook.com/dialog/oauth?";
-    oauth2_url += "client_id=" + this.options.client_id;
-    oauth2_url += "&redirect_uri=" + this.options.redirect_uri;
-    oauth2_url += "&scope=status_update"
-    oauth2_url += "&response_type=token"
+    var oauth2_url = "https://www.facebook.com/dialog/oauth?"+
+          "client_id=" + this.options.client_id+
+          "&redirect_uri=" + this.options.redirect_uri+
+          "&scope=status_update&response_type=token"
 
     // Open Child browser and ask for permissions
     window.plugins.childBrowser.onLocationChange = this.facebookLocChanged
