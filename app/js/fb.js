@@ -52,14 +52,14 @@ var facebook_connection = {
     // page is our success page.
     if (loc.indexOf(facebook_connection.options.redirect_uri) == 0 || 
         loc.indexOf("https://www.facebook.com/connect/login_success.html") > -1) {
-      window.plugins.childBrowser.close();
+      window.plugins.childBrowser.close()
       
       // parse params
-      var accessParams = {};
-      var qvars_tmp = loc.split("#")[1].split('&');
+      var accessParams = {}
+      var qvars_tmp = loc.split("#")[1].split('&')
       for (var i = 0; i < qvars_tmp.length; i++) {
-        var y = qvars_tmp[i].split('=');
-        accessParams[y[0]] = decodeURIComponent(y[1]);
+        var y = qvars_tmp[i].split('=')
+        accessParams[y[0]] = decodeURIComponent(y[1])
       }
 
       if(accessParams.access_token)
