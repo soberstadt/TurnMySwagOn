@@ -64,7 +64,7 @@ var facebook_connection = {
       if(accessParams.access_token)
       {
         facebook_connection.user_data = accessParams
-        // save facebook token to local storage
+        // save Facebook token to local storage
         localStorage.setItem(facebook_connection.options.token, JSON.stringify(accessParams))
         // get user info
         facebook_connection.getMe({success: facebook_connection.login_success_cb, 
@@ -89,7 +89,7 @@ var facebook_connection = {
       error("No token saved in localStorage")
   },
 
-  // ask facebook for user name, great for checking access token
+  // ask Facebook for user name, great for checking access token
   // calls options.success or options.error callback when complete
   //
   // You must either have a access token saved to user_data.access_token or pass 
@@ -151,7 +151,7 @@ var facebook_connection = {
     // TODO: Not implemented yet
   },
 
-  // post a facebook status
+  // post a Facebook status
   //
   // You must either have a access token saved to user_data.access_token or pass 
   //  one in with the token option
@@ -183,5 +183,38 @@ var facebook_connection = {
     $.post(url, {message: options.message})
         .success(options.success)
         .error(options.failure)
+  },
+
+  // logout of Facebook
+  //
+  // You must be have an access token saved to user_data.access_token
+  //
+  // success - The callback for successful logout
+  // error   - The callback for error on logout
+  logout:function(success, error) {
+    // Thanks to @keganzo for the url
+    // http://goo.gl/xBHcj
+    facebook_connection.logout_success_cb = success
+    facebook_connection.logout_error_cb = error
+
+    window.plugins.childBrowser.showWebPage("https://www.facebook.com/logout.php"+
+      "?next="+facebook_connection.options.redirect_uri+
+      "&access_token=" + facebook_connection.user_data.access_token)
+    window.plugins.childBrowser.onLocationChange = facebook_connection.logout_loc_chage
+  },
+
+  // INTERNAL function for childBrowser's location change on logout
+  logout_loc_chage:function(loc) {
+    if (loc.indexOf(facebook_connection.options.redirect_uri) == 0) {
+      window.plugins.childBrowser.close()
+      if(facebook_connection.logout_success_cb)
+        facebook_connection.logout_success_cb()
+    }
+    else if(loc.indexOf("facebook.com/home.php") != -1) {
+      //fail!
+      window.plugins.childBrowser.close()
+      if(facebook_connection.logout_error_cb)
+        facebook_connection.logout_error_cb()
+    }
   }
 }
