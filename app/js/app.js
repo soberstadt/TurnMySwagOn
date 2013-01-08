@@ -34,7 +34,7 @@ function showPostBox() {
   $('#message_box_post').removeClass('hidden_top')
   if(window.facebook && window.facebook.enabled) {
     $("#facebook_name").show()
-    $("#facebook_name span").html(window.facebook.user_name)
+    $("#facebook_name span").html(facebook_connection.user_data.user_name)
   }
   else
     $("#facebook_name").hide()
@@ -177,8 +177,9 @@ function twitter_login () {
 function facebook_login () {
   facebook_connection.init(
     function() {
-      console.log("Successfully recovered saved facebook!")
+      console.log("Successfully logged into facebook!")
       $('.facebook').removeClass('disabled')
+      window.facebook = { enabled:true }
     },
     function(error) {
       window.app_alert("Error getting user data!")
@@ -232,16 +233,17 @@ function sharePost () {
 
   if(window.facebook && window.facebook.enabled) {
     window.waiting_for.facebook = true;
-    facebook_connection.post(trimmed,
-      function(data) {
+    facebook_connection.post({message: trimmed,
+      success: function(data) {
         post_success("facebook")
       },
-      function(error, something) {
+      failure: function(error, something) {
         if(error.status == 200)
           post_success("facebook")
         else
           post_fail("facebook")
-      })
+      }
+    })
   }
 }
 
@@ -294,15 +296,16 @@ if (rawData !== null) {
     }
   )
 } 
-facebook_connection.recoverSavedToken(
-  function() {
-    console.log("Successfully recovered saved facebook!")
-    $('.facebook').removeClass('disabled')
-  },
-  function() {
-    window.app_alert("Error getting user data!")
-  }
-)
+// facebook_connection.recoverSavedToken(
+//   function() {
+//     console.log("Successfully recovered saved facebook!")
+//     $('.facebook').removeClass('disabled')
+//     window.facebook = { enabled:true }
+//   },
+//   function() {
+//     window.app_alert("Error getting user data!")
+//   }
+// )
 
 delete storedAccessData
 delete rawData
